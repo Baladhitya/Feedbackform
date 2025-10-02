@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-container">
+    <h2 class="mb-4">{{ form.title }}</h2>
+    <form method="POST">
+        {% for q in form.questions %}
+        <div class="mb-3">
+            <label class="form-label">{{ q.text }}</label>
+            {% if q.type == 'text' %}
+                <input type="text" class="form-control" name="q{{ loop.index0 }}" required>
+            {% elif q.type == 'textarea' %}
+                <textarea class="form-control" name="q{{ loop.index0 }}" rows="3" required></textarea>
+            {% elif q.type == 'radio' %}
+                {% for opt in q.options %}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="q{{ loop.index0 }}" value="{{ opt }}" required>
+                    <label class="form-check-label">{{ opt }}</label>
+                </div>
+                {% endfor %}
+            {% elif q.type == 'dropdown' %}
+                <select class="form-select" name="q{{ loop.index0 }}" required>
+                    <option value="">Select</option>
+                    {% for opt in q.options %}
+                    <option value="{{ opt }}">{{ opt }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </form>
+</div>
+{% endblock %}
