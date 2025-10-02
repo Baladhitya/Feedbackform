@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-container">
+    <h2 class="mb-4">Create New Form</h2>
+    <form id="createForm" method="POST" action="/create_form">
+        <div class="mb-3">
+            <label for="form_title" class="form-label">Form Title</label>
+            <input type="text" class="form-control" id="form_title" name="form_title" required>
+        </div>
+        <div id="questions">
+            <!-- Questions will be added here dynamically -->
+        </div>
+        <button type="button" class="btn btn-secondary mb-3" id="addQuestion">Add Question</button>
+        <button type="submit" class="btn btn-primary w-100">Create Form</button>
+    </form>
+</div>
+<script>
+let questionCount = 0;
+const questionTypes = [
+    { value: 'text', label: 'Text' },
+    { value: 'textarea', label: 'Paragraph' },
+    { value: 'radio', label: 'Multiple Choice' },
+    { value: 'dropdown', label: 'Dropdown' }
+];
+function getQuestionHtml(idx) {
+    return `<div class="mb-3 border rounded p-3 bg-light">
+        <label class="form-label">Question ${idx + 1}</label>
+        <input type="text" class="form-control mb-2" name="question_${idx}_text" placeholder="Enter question text" required>
+        <select class="form-select mb-2" name="question_${idx}_type" onchange="showOptions(this, ${idx})">
+            ${questionTypes.map(qt => `<option value='${qt.value}'>${qt.label}</option>`).join('')}
+        </select>
+        <div id="options_${idx}" style="display:none;">
+            <input type="text" class="form-control mb-2" name="question_${idx}_options" placeholder="Comma separated options">
+        </div>
+        <button type="button" class="btn btn-danger btn-sm" onclick="removeQuestion(${idx})">Remove</button>
+    </div>`;
+}
+document.getElementById('addQuestion').onclick = function() {
+    const questionsDiv = document.getElementById('questions');
+    questionsDiv.insertAdjacentHTML('beforeend', getQuestionHtml(questionCount));
+    questionCount++;
+};
+window.removeQuestion = function(idx) {
+    const questionsDiv = document.getElementById('questions');
+    questionsDiv.children[idx].remove();
+};
+window.showOptions = function(select, idx) {
+    const optionsDiv = document.getElementById('options_' + idx);
+    if (select.value === 'radio' || select.value === 'dropdown') {
+        optionsDiv.style.display = '';
+    } else {
+        optionsDiv.style.display = 'none';
+    }
+};
+</script>
+{% endblock %}
