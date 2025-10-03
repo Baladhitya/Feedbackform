@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-container">
+    <h2 class="mb-4">All Forms</h2>
+    <a href="/create_form" class="btn btn-primary mb-3">+ Create New Form</a>
+    {% if forms %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Creator</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for form in forms %}
+            <tr>
+                <td>{{ form.title }}</td>
+                <td>{{ form.creator }}</td>
+                <td>
+                    <a href="/fill_form/{{ loop.index0 }}" class="btn btn-success btn-sm">Fill</a>
+                    <a href="/view_responses/{{ loop.index0 }}" class="btn btn-info btn-sm">View Responses</a>
+                    {% if form.creator == session['username'] %}
+                        <a href="/edit_form/{{ loop.index0 }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form method="POST" action="/delete_form/{{ loop.index0 }}" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this form?');">Delete</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No forms created yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
