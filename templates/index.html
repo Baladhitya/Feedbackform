@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-container">
+    <h1 class="mb-4">Feedback Form</h1>
+    <form id="feedbackForm" method="POST" action="/submit">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+            <div class="error-message" id="nameError"></div>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+            <div class="error-message" id="emailError"></div>
+        </div>
+        <div class="mb-3">
+            <label for="feedback" class="form-label">Feedback</label>
+            <textarea class="form-control" id="feedback" name="feedback" rows="4" required></textarea>
+            <div class="error-message" id="feedbackError"></div>
+        </div>
+        <div class="mb-3">
+            <label for="rating" class="form-label">How would you rate our service?</label>
+            <select class="form-select" id="rating" name="rating" required>
+                <option value="">Select</option>
+                <option value="Excellent">Excellent</option>
+                <option value="Good">Good</option>
+                <option value="Average">Average</option>
+                <option value="Poor">Poor</option>
+            </select>
+            <div class="error-message" id="ratingError"></div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Would you recommend us?</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="recommend" id="recommendYes" value="Yes" required>
+                    <label class="form-check-label" for="recommendYes">Yes</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="recommend" id="recommendNo" value="No" required>
+                    <label class="form-check-label" for="recommendNo">No</label>
+                </div>
+            </div>
+            <div class="error-message" id="recommendError"></div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </form>
+</div>
+<link rel="stylesheet" href="/static/css/style.css">
+
+<!-- Show all submissions below the form -->
+<div class="form-container mt-5">
+    <h2 class="mb-4">All Feedback Submissions</h2>
+    {% if submissions %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Feedback</th>
+                <th>Rating</th>
+                <th>Recommend</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in submissions %}
+            <tr>
+                <td>{{ s.username }}</td>
+                <td>{{ s.name }}</td>
+                <td>{{ s.email }}</td>
+                <td>{{ s.feedback }}</td>
+                <td>{{ s.rating }}</td>
+                <td>{{ s.recommend }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No submissions yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
