@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-container">
+    <h2 class="mb-4">Thank You for Your Feedback!</h2>
+    <ul class="list-group">
+        <li class="list-group-item"><strong>Name:</strong> {{ name }}</li>
+        <li class="list-group-item"><strong>Email:</strong> {{ email }}</li>
+        <li class="list-group-item"><strong>Feedback:</strong> {{ feedback }}</li>
+        <li class="list-group-item"><strong>Rating:</strong> {{ rating }}</li>
+        <li class="list-group-item"><strong>Recommend:</strong> {{ recommend }}</li>
+    </ul>
+    <a href="/" class="btn btn-link mt-3">Submit another response</a>
+</div>
+{% endblock %}

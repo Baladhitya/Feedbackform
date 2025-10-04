@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-container">
+    <h2 class="mb-4">Responses for: {{ form.title }}</h2>
+    <!-- Analytics -->
+    <div class="mb-3">
+        <strong>Total Responses:</strong> {{ form.responses|length }}<br>
+        {% for idx, q in enumerate(form.questions) %}
+            {% set answers = form.responses | map(attribute='answers') | map(attribute=idx) | list %}
+            {% set most_common = answers|groupby('self')|sort(attribute='list', reverse=True)|first %}
+            <strong>Most common for "{{ q.text }}":</strong> {{ most_common.grouper if most_common else 'N/A' }}<br>
+        {% endfor %}
+    </div>
+    <!-- Filter box -->
+    <input type="text" id="filterInput" class="form-control mb-3" placeholder="Filter by user or answer..." onkeyup="filterTable()">
+    {% if form.responses %}
+    <table class="table table-bordered" id="responsesTable">
+        <thead>
+            <tr>
+                <th>User</th>
+                {% for q in form.questions %}
+                <th>{{ q.text }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in form.responses %}
+            <tr>
+                <td>{{ r.username }}</td>
+                {% for answer in r.answers %}
+                <td>{{ answer }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No responses yet.</p>
+    {% endif %}
+</div>
+<script>
+function filterTable() {
+    var input = document.getElementById('filterInput');
+    var filter = input.value.toLowerCase();
+    var table = document.getElementById('responsesTable');
+    var trs = table.getElementsByTagName('tr');
+    for (var i = 1; i < trs.length; i++) {
+        var tds = trs[i].getElementsByTagName('td');
+        var show = false;
+        for (var j = 0; j < tds.length; j++) {
+            if (tds[j].textContent.toLowerCase().indexOf(filter) > -1) {
+                show = true;
+                break;
+            }
+        }
+        trs[i].style.display = show ? '' : 'none';
+    }
+}
+</script>
+{% endblock %}
